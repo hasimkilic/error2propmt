@@ -1,6 +1,6 @@
 {
   "name": "error2prompt",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Turn runtime errors into AI-ready prompts.",
   "type": "module",
   "license": "MIT",
@@ -32,7 +32,8 @@
   },
   "dependencies": {
     "cac": "^6.7.14",
-    "clipboardy": "^4.0.0"
+    "clipboardy": "^4.0.0",
+    "tesseract.js": "^7.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",

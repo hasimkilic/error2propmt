@@ -2,9 +2,9 @@
 
 Turn runtime errors into AI-ready prompts.
 
-`error2prompt` converts runtime and framework error text into structured markdown that is ready to paste into ChatGPT, Cursor, Claude, Copilot, or Gemini.
+`error2prompt` converts runtime and framework errors into structured markdown that is ready to paste into ChatGPT, Cursor, Claude, Copilot, or Gemini.
 
-It is a local, deterministic context generator for developer debugging workflows. It is not an OCR tool, screenshot parser, AI API wrapper, dashboard, or browser automation tool.
+It is a local, deterministic context generator for developer debugging workflows. It can work from copied error text, log files, clipboard contents, and screenshots/images.
 
 ## Install
 
@@ -24,7 +24,10 @@ By default, the CLI reads from piped stdin when available. If stdin is empty, it
 cat error.log | npx error2prompt
 npx error2prompt ./error.log --print --no-copy
 npx error2prompt --clipboard
+npx error2prompt --image ./nextjs-error.png --print --no-copy
 ```
+
+Image input uses local OCR first, then runs the extracted text through the same framework-aware parser. This turns screenshot-heavy debugging into compact markdown, which is usually cheaper and clearer for AI tools than uploading the full image.
 
 Example success output:
 
@@ -40,6 +43,16 @@ Example success output:
 import { createErrorContext } from "error2prompt";
 
 const context = createErrorContext(error);
+
+console.log(context.markdown);
+```
+
+For screenshots or saved images:
+
+```ts
+import { createErrorContextFromImage } from "error2prompt";
+
+const context = await createErrorContextFromImage("./nextjs-error.png");
 
 console.log(context.markdown);
 ```
@@ -71,11 +84,10 @@ In a browser, `error2prompt` can copy the generated markdown and open an AI assi
 - React rendering and hydration errors
 - Vite runtime/build overlay text
 - Stack traces and file hints
+- Screenshot/image OCR to markdown through `--image`
 
 ## Non-Goals
 
-- OCR
-- screenshots
 - PDFs
 - cloud sync
 - AI APIs
@@ -84,7 +96,7 @@ In a browser, `error2prompt` can copy the generated markdown and open an AI assi
 - analytics
 - browser automation
 
-Screenshots are intentionally outside the core MVP. For lower token cost, prefer captured error text, stack traces, and framework metadata over image input. Screenshot-to-markdown can be added later as a separate adapter without changing the core parser.
+`error2prompt` does not auto-submit messages into third-party AI chats. Browser security blocks normal web pages from pasting and sending text into another website. For that workflow, use a browser extension, editor extension, or official AI API integration later.
 
 ## Example Output
 

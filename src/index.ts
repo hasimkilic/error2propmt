@@ -17,5 +17,7 @@ export function createErrorContext(
 export { captureRuntimeErrors } from "./core/capture.js";
 export { copyPromptAndOpenAiAssistant, copyPromptToClipboard, openAiAssistant } from "./core/browser-actions.js";
 export type { AiAssistantTarget, OpenAiAssistantOptions } from "./core/browser-actions.js";
+export { createErrorContextFromImage, extractTextFromImage } from "./core/image.js";
+export type { ImageErrorContextOptions, ImageTextExtractionResult } from "./core/image.js";
 export { generateMarkdown } from "./core/markdown.js";
 export type * from "./types/index.js";

@@ -12,6 +12,16 @@ describe("createErrorContext", () => {
     expect(result.context.file).toBe("app/page.tsx");
   });
 
+  it("detects OCR-truncated hydration messages", () => {
+    const result = createErrorContext(`Error: Text content does not match ¢
+at Page (app/page.tsx:10:5)
+at renderWithHooks (node_modules/next/di:`);
+
+    expect(result.context.framework).toBe("nextjs");
+    expect(result.context.errorType).toBe("Hydration Error");
+    expect(result.context.file).toBe("app/page.tsx");
+  });
+
   it("detects React rendering errors", () => {
     const result = createErrorContext(`Error: Invalid hook call. Hooks can only be called inside of the body of a function component.
     at App (src/App.tsx:4:7)

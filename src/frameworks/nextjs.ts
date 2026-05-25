@@ -3,6 +3,7 @@ import { findFileHint, firstUserFrame, parseStackTrace } from "../core/stack.js"
 
 const HYDRATION_PATTERNS = [
   /hydration/i,
+  /text content does not match/i,
   /text content does not match server-rendered html/i,
   /hydrating/i,
   /server rendered html/i

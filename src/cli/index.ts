@@ -5,12 +5,15 @@ import process from "node:process";
 import { cac } from "cac";
 import { createErrorContext } from "../index.js";
 import { readClipboard, writeClipboard } from "../core/clipboard.js";
+import { extractTextFromImage } from "../core/image.js";
 import type { SupportedFramework } from "../types/index.js";
 
 const cli = cac("error2prompt");
 
 interface CliOptions {
   file?: string;
+  image?: string;
+  ocrLang?: string;
   clipboard?: boolean;
   copy?: boolean;
   print?: boolean;
@@ -21,6 +24,8 @@ interface CliOptions {
 cli
   .command("[file]", "Generate an AI-ready prompt from a runtime error")
   .option("--file <path>", "Read error text from a file")
+  .option("--image <path>", "Read error text from a screenshot/image with OCR")
+  .option("--ocr-lang <lang>", "OCR language for --image", { default: "eng" })
   .option("--clipboard", "Read error text from the clipboard")
   .option("--no-copy", "Do not copy generated markdown to the clipboard")
   .option("--print", "Print generated markdown to stdout")
@@ -53,10 +58,15 @@ cli
   });
 
 cli.help();
-cli.version("0.1.1");
+cli.version("0.2.0");
 cli.parse();
 
 async function readInput(fileArg: string | undefined, options: CliOptions): Promise<string> {
+  if (options.image) {
+    const extracted = await extractTextFromImage(options.image, { lang: options.ocrLang });
+    return extracted.text;
+  }
+
   const file = options.file ?? fileArg;
   if (file) {
     return readFile(file, "utf8");
