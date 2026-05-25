@@ -47,14 +47,23 @@ console.log(context.markdown);
 ## Browser Capture
 
 ```ts
-import { captureRuntimeErrors } from "error2prompt";
+import { captureRuntimeErrors, copyPromptAndOpenAiAssistant } from "error2prompt";
+
+let latestMarkdown = "";
 
 captureRuntimeErrors({
   onContext(context) {
+    latestMarkdown = context.markdown;
     console.log(context.markdown);
   }
 });
+
+document.querySelector("#open-with-ai")?.addEventListener("click", async () => {
+  await copyPromptAndOpenAiAssistant(latestMarkdown, { target: "chatgpt" });
+});
 ```
+
+In a browser, `error2prompt` can copy the generated markdown and open an AI assistant. It does not auto-submit messages into third-party chat products because that requires an extension, API integration, or browser automation.
 
 ## Supported MVP Scope
 
@@ -74,6 +83,8 @@ captureRuntimeErrors({
 - authentication
 - analytics
 - browser automation
+
+Screenshots are intentionally outside the core MVP. For lower token cost, prefer captured error text, stack traces, and framework metadata over image input. Screenshot-to-markdown can be added later as a separate adapter without changing the core parser.
 
 ## Example Output
 
